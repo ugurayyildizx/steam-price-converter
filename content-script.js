@@ -23,9 +23,9 @@ const SELECTORS = [
     '.game_purchase_price .price .es_regional_onmouse .es_regional_icon'
 ].map(s => s + ':not(.steam-try)').join(', ');
 
-const REGEX_USD = /\$([0-9,]+\.\d{2})\s*(USD)?/;
-const REGEX_EUR = /([0-9,]+\.\d{2})€/;
-const REGEX_TRY = /([0-9,]+\.\d{2})\s*TL/;
+const REGEX_USD = /\$\s*([0-9,.]+\d{2})\s*(USD)?/;
+const REGEX_EUR = /([0-9,.]+\d{2})\s*€/;
+const REGEX_TRY = /([0-9,.]+\d{2})\s*TL/;
 
 async function updatePrices() {
     if (!chrome.runtime?.id) return;
@@ -165,13 +165,14 @@ async function updatePrices() {
             symbol = '$';
         }
 
-        if (!text.includes(symbol) && !element.dataset.originalText) return;
+        // Metin hem sembolü içermeli hem de regex ile eşleşmeli
+        const matches = text.match(regex);
+        if (!matches && !element.dataset.originalText) return;
 
         if (!element.dataset.originalText) {
             element.dataset.originalText = text;
         }
 
-        const matches = text.match(regex);
         if (!matches) {
             if (element.innerText !== element.dataset.originalText) {
                 element.innerText = element.dataset.originalText;
@@ -179,7 +180,8 @@ async function updatePrices() {
             return;
         }
 
-        const sourcePrice = parseFloat(matches[1].replace(/,/g, ''));
+        const sourcePriceStr = matches[1].replace(/\./g, '').replace(',', '.');
+        const sourcePrice = parseFloat(sourcePriceStr);
         const targetPrice = sourcePrice * RATE;
 
         const isOldPrice = element.classList.contains('discount_original_price') || 
