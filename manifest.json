@@ -1,0 +1,37 @@
+{
+  "name": "Steam Price Converter",
+  "version": "2.4",
+  "manifest_version": 3,
+  "icons": {
+    "128": "icon-128x128.png"
+  },
+  "description": "Steam mağaza fiyatlarını seçtiğiniz para birimine (TRY, EUR, USD) dönüştürerek görüntülemenizi sağlar.",
+  "author": "ugurayyildizx",
+  "permissions": [
+    "scripting",
+    "webNavigation",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://steampowered.com/*",
+        "https://store.steampowered.com/*",
+        "https://steamcommunity.com/*"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "host_permissions": [
+    "https://steampowered.com/*",
+    "https://store.steampowered.com/*",
+    "https://steamcommunity.com/*"
+  ],
+  "action": {
+    "default_popup": "/popup/index.html",
+    "default_title": "Steam Price Converter"
+  }
+}
