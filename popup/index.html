@@ -1,0 +1,277 @@
+<html lang="tr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Steam Price Converter</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 12px;
+            min-width: 280px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .header h1 {
+            font-size: 15px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: var(--card-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s;
+        }
+
+        .setting-item:hover {
+            border-color: var(--accent);
+        }
+
+        .setting-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .setting-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .setting-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.2;
+        }
+
+        .setting-example {
+            display: block;
+            font-size: 10px;
+            color: var(--accent);
+            margin-top: 2px;
+            opacity: 0.8;
+        }
+
+        /* Modern Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 18px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #475569;
+            transition: .3s;
+            border-radius: 18px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
+
+        .footer {
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .currency-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 6px;
+            background: var(--card-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-top: 2px;
+        }
+
+        .currency-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            font-size: 16px;
+            filter: grayscale(100%);
+            opacity: 0.6;
+        }
+
+        .currency-option:hover {
+            background: rgba(56, 189, 248, 0.1);
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        .currency-option.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent);
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/popup/steam_logo.png" alt="Steam Price Converter">
+            <h1>Steam Price Converter</h1>
+        </div>
+
+        <div class="settings-list">
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">Eklenti Durumu</span>
+                    <span class="setting-desc">Uzantıyı açar veya kapatır.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="statusCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">USD Fiyatları</span>
+                    <span class="setting-desc">Orijinal değeri gösterir.</span>
+                    <span class="setting-example">Örn: 150 TL ($4.50)</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="showUsdCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">Orijinal Fiyatlar</span>
+                    <span class="setting-desc">İndirimsizleri USD bırakır.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="showOriginalUsdCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">İndirimleri Gizle</span>
+                    <span class="setting-desc">Oranı ve eski fiyatı gizler.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="hideDiscountCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="currency-selector" id="currencySelector">
+            <div class="currency-option active" data-currency="USD_TRY" title="USD ➔ TRY">🇹🇷</div>
+            <div class="currency-option" data-currency="USD_EUR" title="USD ➔ EUR">🇪🇺</div>
+            <div class="currency-option" data-currency="EUR_USD" title="EUR ➔ USD">🇺🇸</div>
+        </div>
+
+        <div class="footer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg>
+            <a href="https://github.com/ugurayyildizx" target="_blank">ugurayyildizx</a>
+        </div>
+    </div>
+    <script src="/popup/popup.js"></script>
+</body>
+</html>
