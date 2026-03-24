@@ -25,6 +25,7 @@ const SELECTORS = [
 
 const REGEX_USD = /\$([0-9,]+\.\d{2})\s*(USD)?/;
 const REGEX_EUR = /([0-9,]+\.\d{2})€/;
+const REGEX_TRY = /([0-9,]+\.\d{2})\s*TL/;
 
 async function updatePrices() {
     if (!chrome.runtime?.id) return;
@@ -151,8 +152,18 @@ async function updatePrices() {
         
         const sourceCurrency = CURRENCY_MODE.split('_')[0];
         const targetCurrency = CURRENCY_MODE.split('_')[1];
-        const regex = sourceCurrency === 'EUR' ? REGEX_EUR : REGEX_USD;
-        const symbol = sourceCurrency === 'EUR' ? '€' : '$';
+        
+        let regex, symbol;
+        if (sourceCurrency === 'EUR') {
+            regex = REGEX_EUR;
+            symbol = '€';
+        } else if (sourceCurrency === 'TRY') {
+            regex = REGEX_TRY;
+            symbol = 'TL';
+        } else {
+            regex = REGEX_USD;
+            symbol = '$';
+        }
 
         if (!text.includes(symbol) && !element.dataset.originalText) return;
 
@@ -284,9 +295,8 @@ async function fetchCurrency() {
         console.error("[Steam Price Converter] Frankfurter API failed, trying Binance backup...", error);
     }
 
-    // Backup API: Binance (Only for USD_TRY, USD_EUR, EUR_USD modes)
+    // Backup API: Binance (Supports USD_TRY, USD_EUR, EUR_USD, EUR_TRY, TRY_USD, TRY_EUR)
     try {
-        let binanceSymbol = '';
         let binanceRate = null;
 
         if (CURRENCY_MODE === 'USD_TRY') {
@@ -301,6 +311,28 @@ async function fetchCurrency() {
             const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=EURUSDT`);
             const data = await res.json();
             if (data && data.price) binanceRate = parseFloat(data.price);
+        } else if (CURRENCY_MODE === 'EUR_TRY') {
+            // EUR/TRY = (EUR/USD) * (USD/TRY)
+            const resEurUsd = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=EURUSDT`);
+            const dataEurUsd = await resEurUsd.json();
+            const resUsdTry = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=USDTTRY`);
+            const dataUsdTry = await resUsdTry.json();
+            if (dataEurUsd.price && dataUsdTry.price) {
+                binanceRate = parseFloat(dataEurUsd.price) * parseFloat(dataUsdTry.price);
+            }
+        } else if (CURRENCY_MODE === 'TRY_USD') {
+            const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=USDTTRY`);
+            const data = await res.json();
+            if (data && data.price) binanceRate = 1 / parseFloat(data.price);
+        } else if (CURRENCY_MODE === 'TRY_EUR') {
+            // TRY/EUR = (TRY/USD) * (USD/EUR) = (1 / (USD/TRY)) * (1 / (EUR/USD))
+            const resUsdTry = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=USDTTRY`);
+            const dataUsdTry = await resUsdTry.json();
+            const resEurUsd = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=EURUSDT`);
+            const dataEurUsd = await resEurUsd.json();
+            if (dataUsdTry.price && dataEurUsd.price) {
+                binanceRate = 1 / (parseFloat(dataUsdTry.price) * parseFloat(dataEurUsd.price));
+            }
         }
 
         if (binanceRate !== null) {

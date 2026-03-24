@@ -5,14 +5,14 @@ Steam Price Converter, Steam mağazası ve topluluk sayfalarındaki fiyatları d
 ## Özellikler
 
 - **Yüksek Erişilebilirlik**: Çift katmanlı API desteği. Frankfurter API ulaşılamaz olduğunda otomatik olarak **Binance API** devreye girer.
-- **Çeşitli Para Birimi Modları**:
-  - 🇹🇷 USD ➔ TRY (Varsayılan)
-  - 🇪🇺 USD ➔ EUR
-  - 🇺🇸 EUR ➔ USD
+- **Tüm Kombinasyonlar Desteklenir**:
+  - 🇹🇷 USD-TRY, EUR-TRY
+  - 🇪🇺 USD-EUR, TRY-EUR
+  - 🇺🇸 EUR-USD, TRY-USD
 - **Akıllı İndirim Yönetimi**:
   - **Orijinal Fiyatları Göster**: Dönüştürülmüş fiyatın yanında orijinal değeri de gösterir (Örn: 150 TL ($4.50)).
   - **İndirim Detaylarını Gizle**: İndirim oranlarını ve eski (çizgili) fiyatları tamamen kaldırarak sadece final fiyatını gösteren temiz bir arayüz sağlar.
-- **Optimize Tasarım**: Ayarların hızlıca yapılabilmesi için bayrak ikonları içeren, modern ve kompakt arayüz.
+- **Optimize Tasarım**: Ayarların hızlıca yapılabilmesi için ızgara (grid) yapısında, modern ve kompakt arayüz.
 - **Otomatik Güncelleme**: En güncel kurları gerçek zamanlı olarak otomatik çeker.
 
 ## Kurulum

@@ -5,14 +5,14 @@ Steam Price Converter is a browser extension that dynamically converts prices on
 ## Features
 
 - **High Availability**: Dual-layer API support. Automatically falls back to **Binance API** if the primary Frankfurter API is unavailable.
-- **Multiple Currency Modes**:
-  - 🇹🇷 USD ➔ TRY (Default)
-  - 🇪🇺 USD ➔ EUR
-  - 🇺🇸 EUR ➔ USD
+- **Support for All Combinations**:
+  - 🇹🇷 USD-TRY, EUR-TRY
+  - 🇪🇺 USD-EUR, TRY-EUR
+  - 🇺🇸 EUR-USD, TRY-USD
 - **Smart Discount Management**:
   - **Show Original Prices**: Display converted price along with the original value (e.g., 150 TL ($4.50)).
   - **Hide Discount Details**: Completely removes discount percentages and original prices, showing only the final converted price for a cleaner look.
-- **Optimized UI**: A compact, modern popup interface with flag icons for quick currency switching.
+- **Optimized UI**: A compact, modern grid-based popup interface for quick currency switching.
 - **Auto-Update**: Fetches real-time exchange rates automatically.
 
 ## Installation
