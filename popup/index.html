@@ -168,42 +168,49 @@
         }
 
         .currency-selector {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 6px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            padding: 8px;
             background: var(--card-bg);
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid var(--border);
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .currency-option {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
+            padding: 4px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid transparent;
-            font-size: 16px;
-            filter: grayscale(100%);
             opacity: 0.6;
         }
 
         .currency-option:hover {
             background: rgba(56, 189, 248, 0.1);
-            filter: grayscale(0%);
             opacity: 1;
         }
 
         .currency-option.active {
             background: rgba(56, 189, 248, 0.2);
             border-color: var(--accent);
-            filter: grayscale(0%);
             opacity: 1;
+        }
+
+        .opt-flag {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .opt-label {
+            font-size: 9px;
+            font-weight: 600;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -228,7 +235,7 @@
 
             <div class="setting-item">
                 <div class="setting-info">
-                    <span class="setting-label">USD Fiyatları</span>
+                    <span class="setting-label">Döviz Fiyatları</span>
                     <span class="setting-desc">Orijinal değeri gösterir.</span>
                     <span class="setting-example">Örn: 150 TL ($4.50)</span>
                 </div>
@@ -241,7 +248,7 @@
             <div class="setting-item">
                 <div class="setting-info">
                     <span class="setting-label">Orijinal Fiyatlar</span>
-                    <span class="setting-desc">İndirimsizleri USD bırakır.</span>
+                    <span class="setting-desc">İndirimsizleri döviz bırakır.</span>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="showOriginalUsdCheck">
@@ -262,9 +269,30 @@
         </div>
 
         <div class="currency-selector" id="currencySelector">
-            <div class="currency-option active" data-currency="USD_TRY" title="USD ➔ TRY">🇹🇷</div>
-            <div class="currency-option" data-currency="USD_EUR" title="USD ➔ EUR">🇪🇺</div>
-            <div class="currency-option" data-currency="EUR_USD" title="EUR ➔ USD">🇺🇸</div>
+            <div class="currency-option active" data-currency="USD_TRY" title="USD ➔ TRY">
+                <span class="opt-flag">🇹🇷</span>
+                <span class="opt-label">USD-TRY</span>
+            </div>
+            <div class="currency-option" data-currency="USD_EUR" title="USD ➔ EUR">
+                <span class="opt-flag">🇪🇺</span>
+                <span class="opt-label">USD-EUR</span>
+            </div>
+            <div class="currency-option" data-currency="EUR_TRY" title="EUR ➔ TRY">
+                <span class="opt-flag">🇹🇷</span>
+                <span class="opt-label">EUR-TRY</span>
+            </div>
+            <div class="currency-option" data-currency="EUR_USD" title="EUR ➔ USD">
+                <span class="opt-flag">🇺🇸</span>
+                <span class="opt-label">EUR-USD</span>
+            </div>
+            <div class="currency-option" data-currency="TRY_USD" title="TRY ➔ USD">
+                <span class="opt-flag">🇺🇸</span>
+                <span class="opt-label">TRY-USD</span>
+            </div>
+            <div class="currency-option" data-currency="TRY_EUR" title="TRY ➔ EUR">
+                <span class="opt-flag">🇪🇺</span>
+                <span class="opt-label">TRY-EUR</span>
+            </div>
         </div>
 
         <div class="footer">
